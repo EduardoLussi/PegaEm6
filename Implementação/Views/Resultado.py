@@ -1,11 +1,13 @@
 from tkinter import *
 from Views.Components.Botao import Botao
 from Views.Components.Placar import Placar
+from os import path
 
 
 class Resultado(Frame):
-    def __init__(self, master, parent_root):
+    def __init__(self, master, parent_root, mainRoot):
         self.parent_root = parent_root
+        self.mainRoot = mainRoot
 
         Frame.__init__(self,
                        master=master,
@@ -18,7 +20,8 @@ class Resultado(Frame):
 
         self.master.title("Menu Inicial")
 
-        self.imagemTitulo = PhotoImage(file="img/titulo.png")
+        pathName = path.abspath(path.dirname('')).replace("\\", "/")
+        self.imagemTitulo = PhotoImage(file=f"{pathName}/Views/img/titulo.png")
 
         self.titulo = Label(self, image=self.imagemTitulo)
         self.titulo.configure(background="white")
@@ -33,7 +36,11 @@ class Resultado(Frame):
         self.placar = Placar(self)
         self.placar.place(relx=0.5, rely=0.6, anchor=CENTER)
 
-        self.botao = Botao(self, "Jogar Novamente")
+        self.botao = Botao(self, "Menu Principal", command=self.restart)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
         self.pack()
+
+    def restart(self):
+        self.mainRoot.deiconify()
+        self.master.withdraw()

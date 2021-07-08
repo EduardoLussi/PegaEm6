@@ -2,7 +2,7 @@ from tkinter import *
 
 
 class Botao(Frame):
-    def __init__(self, master, command=None, text="Jogar"):
+    def __init__(self, master, text, command=None):
         Frame.__init__(self, master=master)
 
         self.configure(highlightbackground="#0e6fb6",

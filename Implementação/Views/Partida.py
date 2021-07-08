@@ -3,6 +3,7 @@ from Views.Components.Mesa import Mesa
 from Views.Components.Fileira import Fileira
 from Views.Components.Placar import Placar
 from Views.Resultado import Resultado
+from Views.Components.Botao import Botao
 from os import path
 
 
@@ -48,7 +49,6 @@ class Partida(Frame):
         self.placar.place(relx=0.98, rely=0.3, anchor=E)
 
         self.frMao = Fileira(self, 10)
-        self.frMao.bind("<Button-1>", self.jogarCarta)
         self.frMao.place(relx=0.5, rely=0.82, anchor=CENTER)
 
         self.lblMessage = Label(self, text="Escolha sua carta")
@@ -63,14 +63,18 @@ class Partida(Frame):
         self.lblRestart.bind("<Button-1>", self.restart)
         self.lblRestart.place(relx=0.04, rely=0.93, anchor=CENTER)
 
+        self.botao = Botao(self, "Próximo", command=self.jogarCarta)
+        self.botao.place(relx=0.93, rely=0.93, anchor=CENTER)
+
         self.pack()
 
     def restart(self, e):
         self.mainRoot.deiconify()
         self.master.withdraw()
 
-    def jogarCarta(self, e):
+    def jogarCarta(self):
         rootResultado = Toplevel()
-        rootResultado.protocol("WM_DELETE_WINDOW", self.mainRoot)
-        Resultado(rootResultado, self.master)
+        rootResultado.protocol("WM_DELETE_WINDOW", self.mainRoot.destroy)
+        Resultado(rootResultado, self.master, self.mainRoot)
         self.master.withdraw()
+

@@ -47,7 +47,7 @@ class MenuIniciar(Frame):
 
         self.frQtJogadores.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-        self.botao = Botao(self, command=self.iniciarPartida)
+        self.botao = Botao(self, "Jogar", command=self.iniciarPartida)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
         self.pack()
