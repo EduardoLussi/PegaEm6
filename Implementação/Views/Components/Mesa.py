@@ -1,5 +1,5 @@
 from tkinter import *
-from Components.Fileira import Fileira
+from Views.Components.Fileira import Fileira
 
 
 class Mesa(Frame):
@@ -11,4 +11,3 @@ class Mesa(Frame):
             fileira = Fileira(self)
             self.fileiras.append(fileira)
             fileira.grid(row=i, column=0)
-

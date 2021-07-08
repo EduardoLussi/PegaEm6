@@ -1,6 +1,6 @@
 from tkinter import *
-from Components.Botao import Botao
-from Components.Placar import Placar
+from Views.Components.Botao import Botao
+from Views.Components.Placar import Placar
 
 
 class Resultado(Frame):
@@ -37,9 +37,3 @@ class Resultado(Frame):
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
         self.pack()
-
-
-if __name__ == '__main__':
-    root = Tk()
-    tela = Resultado(root, root)
-    root.mainloop()

@@ -1,12 +1,15 @@
 from tkinter import *
-from Components.Mesa import Mesa
-from Components.Fileira import Fileira
-from Components.Placar import Placar
+from Views.Components.Mesa import Mesa
+from Views.Components.Fileira import Fileira
+from Views.Components.Placar import Placar
+from Views.Resultado import Resultado
+from os import path
 
 
 class Partida(Frame):
-    def __init__(self, master, parent_root):
+    def __init__(self, master, parent_root, mainRoot):
         self.parent_root = parent_root
+        self.mainRoot = mainRoot
 
         Frame.__init__(self,
                        master=master,
@@ -45,6 +48,7 @@ class Partida(Frame):
         self.placar.place(relx=0.98, rely=0.3, anchor=E)
 
         self.frMao = Fileira(self, 10)
+        self.frMao.bind("<Button-1>", self.jogarCarta)
         self.frMao.place(relx=0.5, rely=0.82, anchor=CENTER)
 
         self.lblMessage = Label(self, text="Escolha sua carta")
@@ -53,21 +57,20 @@ class Partida(Frame):
                                   fg="#0e6fb6")
         self.lblMessage.place(relx=0.5, rely=0.95, anchor=CENTER)
 
-        self.imgRestart = PhotoImage(file="img/refresh.png")
+        pathName = path.abspath(path.dirname('')).replace("\\", "/")
+        self.imgRestart = PhotoImage(file=f"{pathName}/Views/img/refresh.png")
         self.lblRestart = Label(self, image=self.imgRestart, bg='white', cursor="hand2")
+        self.lblRestart.bind("<Button-1>", self.restart)
         self.lblRestart.place(relx=0.04, rely=0.93, anchor=CENTER)
-
-        # self.master.withdraw() # Esconde root da tela atual
-        # self.abrirTelaIniciarJogada()  # Chama a tela de iniciar jogada
 
         self.pack()
 
-    # def abrirTelaIniciarJogada(self):
-    # root = Toplevel()  # Cria root da tela de iniciar jogada
-    # IniciarJogada(root, self.master) # Cria tela de iniciar jogada
+    def restart(self, e):
+        self.mainRoot.deiconify()
+        self.master.withdraw()
 
-
-if __name__ == '__main__':
-    root = Tk()
-    mesa = Partida(root, root)
-    root.mainloop()
+    def jogarCarta(self, e):
+        rootResultado = Toplevel()
+        rootResultado.protocol("WM_DELETE_WINDOW", self.mainRoot)
+        Resultado(rootResultado, self.master)
+        self.master.withdraw()

@@ -1,10 +1,12 @@
 from tkinter import *
-from Components.Botao import Botao
+from Views.Components.Botao import Botao
+from Views.Partida import Partida
 
 
 class IniciarJogada(Frame):
-    def __init__(self, master, parent_root):
+    def __init__(self, master, parent_root, mainRoot):
         self.parent_root = parent_root
+        self.mainRoot = mainRoot
 
         Frame.__init__(self,
                        master=master,
@@ -46,13 +48,13 @@ class IniciarJogada(Frame):
                                      fg="#0e6fb6")
         self.lblEditarNome.place(relx=0.15, rely=0.97, anchor=CENTER)
 
-        self.botao = Botao(self)
+        self.botao = Botao(self, command=self.jogar)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
         self.pack()
 
-
-if __name__ == '__main__':
-    root = Tk()
-    tela = IniciarJogada(root, root)
-    root.mainloop()
+    def jogar(self):
+        rootPartida = Toplevel()
+        rootPartida.protocol("WM_DELETE_WINDOW", self.mainRoot.destroy)
+        Partida(rootPartida, self.master, self.mainRoot)
+        self.master.withdraw()

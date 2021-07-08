@@ -6,7 +6,7 @@ class Fileira(Frame):
     def __init__(self, master, qtCartas=5):
         Frame.__init__(self, master=master)
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
-        self.cartas = [PhotoImage(file=f"{pathName}/img/cartas/9.png")] * qtCartas
+        self.cartas = [PhotoImage(file=f"{pathName}/Views/img/cartas/9.png")] * qtCartas
         self.atualizarCartas()
 
     def atualizarCartas(self):
