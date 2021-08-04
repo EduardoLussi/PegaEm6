@@ -1,6 +1,7 @@
 from tkinter import *
 from Views.Components.Botao import Botao
 from Views.Partida import Partida
+from os import path
 
 
 class IniciarJogada(Frame):
@@ -48,12 +49,22 @@ class IniciarJogada(Frame):
         self.lblEditarNome.configure(font=("Century Gothic", 15),
                                      bg="white",
                                      fg="#0e6fb6")
-        self.lblEditarNome.place(relx=0.15, rely=0.97, anchor=CENTER)
+        self.lblEditarNome.place(relx=0.85, rely=0.97, anchor=CENTER)
 
         self.botao = Botao(self, "Continuar", command=self.jogar)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
+        pathName = path.abspath(path.dirname('')).replace("\\", "/")
+        self.imgRestart = PhotoImage(file=f"{pathName}/Views/img/refresh.png")
+        self.lblRestart = Label(self, image=self.imgRestart, bg='white', cursor="hand2")
+        self.lblRestart.bind("<Button-1>", self.restart)
+        self.lblRestart.place(relx=0.04, rely=0.93, anchor=CENTER)
+
         self.pack()
+
+    def restart(self, e):
+        self.mainRoot.deiconify()
+        self.master.withdraw()
 
     def jogar(self):
         rootPartida = Toplevel()

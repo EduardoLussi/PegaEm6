@@ -48,7 +48,19 @@ class Partida(Frame):
         self.placar = Placar(self)
         self.placar.place(relx=0.98, rely=0.3, anchor=E)
 
-        self.frMao = Fileira(self, 10)
+        self.frMao = Frame(self)
+        pathName = path.abspath(path.dirname('')).replace("\\", "/")
+        self.img = PhotoImage(file=f"{pathName}/Views/img/cartas/9.png")
+        for i in range(10):
+            carta = Button(self.frMao,
+                           image=self.img,
+                           relief="solid",
+                           bd=0,
+                           activebackground="#ead215",
+                           bg="white",
+                           cursor="hand2",
+                           command=self.jogarCarta)
+            carta.grid(row=0, column=i)
         self.frMao.place(relx=0.5, rely=0.82, anchor=CENTER)
 
         self.lblMessage = Label(self, text="Escolha sua carta")
@@ -62,9 +74,6 @@ class Partida(Frame):
         self.lblRestart = Label(self, image=self.imgRestart, bg='white', cursor="hand2")
         self.lblRestart.bind("<Button-1>", self.restart)
         self.lblRestart.place(relx=0.04, rely=0.93, anchor=CENTER)
-
-        self.botao = Botao(self, "Próximo", command=self.jogarCarta)
-        self.botao.place(relx=0.93, rely=0.93, anchor=CENTER)
 
         self.pack()
 
