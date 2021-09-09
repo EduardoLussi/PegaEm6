@@ -5,14 +5,14 @@ from os import path
 
 
 class Resultado(Frame):
-    def __init__(self, master, parent_root, mainRoot):
-        self.parent_root = parent_root
-        self.mainRoot = mainRoot
+    def __init__(self, master, interface):
+        self.master = master
+        self.interface = interface
 
         Frame.__init__(self,
-                       master=master,
-                       width=self.parent_root.winfo_screenwidth(),
-                       height=self.parent_root.winfo_screenheight(),
+                       master=self.master,
+                       width=self.master.winfo_screenwidth(),
+                       height=self.master.winfo_screenheight(),
                        background="white")
 
         self.master.configure(background="white")
@@ -36,11 +36,10 @@ class Resultado(Frame):
         self.placar = Placar(self)
         self.placar.place(relx=0.5, rely=0.6, anchor=CENTER)
 
-        self.botao = Botao(self, "Menu Principal", command=self.restart)
+        self.botao = Botao(self, "Menu Principal", command=self.reiniciar)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
         self.pack()
 
-    def restart(self):
-        self.mainRoot.deiconify()
-        self.master.withdraw()
+    def reiniciar(self):
+        ...

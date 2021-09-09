@@ -4,15 +4,15 @@ from Views.Partida import Partida
 from os import path
 
 
-class IniciarJogada(Frame):
-    def __init__(self, master, parent_root, mainRoot):
-        self.parent_root = parent_root
-        self.mainRoot = mainRoot
+class IniciarLance(Frame):
+    def __init__(self, master, interface):
+        self.interface = interface
+        self.master = master
 
         Frame.__init__(self,
                        master=master,
-                       width=self.parent_root.winfo_screenwidth(),
-                       height=self.parent_root.winfo_screenheight(),
+                       width=self.master.winfo_screenwidth(),
+                       height=self.master.winfo_screenheight(),
                        background="white")
 
         self.master.configure(background="white")
@@ -22,15 +22,6 @@ class IniciarJogada(Frame):
 
         self.frVez = Frame(self, bg='white')
 
-        self.lblVez = Label(self.frVez, text="Vez de ")
-        self.lblVez.configure(font=("Century Gothic", 80),
-                              bg="white",
-                              fg="#0e6fb6")
-        self.lblVez.grid(row=0, column=0)
-
-        self.nomeJogador = StringVar()
-        self.nomeJogador.set("Jogador 1")
-
         self.lblNomeJogador = Button(self.frVez)
         self.lblNomeJogador.configure(font=("Century Gothic", 80),
                                         bg="white",
@@ -38,20 +29,19 @@ class IniciarJogada(Frame):
                                         relief="solid",
                                         bd=0,
                                         cursor="hand2",
-                                        textvariable=self.nomeJogador,
-                                        width=8,
+                                        text="Vez de ",
                                         command=self.alterarNome)
         self.lblNomeJogador.grid(row=0, column=1)
 
         self.frVez.place(relx=0.5, rely=0.4, anchor=CENTER)
 
-        self.lblEditarNome = Label(self, text=f'Você pode editar seu nome clicando em "{self.nomeJogador.get()}"')
+        self.lblEditarNome = Label(self, text=f'Você pode editar seu nome clicando em Vez de')
         self.lblEditarNome.configure(font=("Century Gothic", 15),
                                      bg="white",
                                      fg="#0e6fb6")
-        self.lblEditarNome.place(relx=0.85, rely=0.97, anchor=CENTER)
+        self.lblEditarNome.place(relx=0.98, rely=0.97, anchor=SE)
 
-        self.botao = Botao(self, "Continuar", command=self.jogar)
+        self.botao = Botao(self, "Continuar", command=self.iniciarLance)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
@@ -63,14 +53,14 @@ class IniciarJogada(Frame):
         self.pack()
 
     def restart(self, e):
-        self.mainRoot.deiconify()
-        self.master.withdraw()
+        ...
 
-    def jogar(self):
-        rootPartida = Toplevel()
-        rootPartida.protocol("WM_DELETE_WINDOW", self.mainRoot.destroy)
-        Partida(rootPartida, self.master, self.mainRoot)
-        self.master.withdraw()
+    def definirJogadorAtual(self, jogador):
+        self.lblNomeJogador.configure(text=f"Vez de {jogador.nome}")
+        self.lblEditarNome.configure(text=f'Você pode editar seu nome clicando em Vez de {jogador.nome}')
+
+    def iniciarLance(self):
+        self.interface.iniciarLance()
 
     def alterarNome(self):
         self.lblEntrada = Label(self, text="Insira o novo nome:")
@@ -90,7 +80,8 @@ class IniciarJogada(Frame):
 
     def atualizarNome(self):
         self.lblEntrada.destroy()
-        self.nomeJogador.set(self.entrada.get())
+        self.lblNomeJogador.configure(text=f"Vez de {self.entrada.get()}")
+        self.lblEditarNome.configure(text=f"Você pode editar seu nome clicando em Vez de {self.entrada.get()}")
         self.entrada.delete(0, 'end')
         self.entrada.destroy()
         self.botaoEntrada.destroy()

@@ -1,24 +1,23 @@
 from tkinter import *
 from Views.Components.Botao import Botao
-from Views.IniciarJogada import IniciarJogada
 from os import path
 
 
 class MenuIniciar(Frame):
-    def __init__(self, master, parent_root, mainRoot):
-        self.parent_root = parent_root
-        self.mainRoot = mainRoot
+    def __init__(self, master, interface):
+        self.master = master
+        self.interface = interface
 
         Frame.__init__(self,
-                       master=master,
-                       width=self.parent_root.winfo_screenwidth(),
-                       height=self.parent_root.winfo_screenheight(),
+                       master=self.master,
+                       width=self.master.winfo_screenwidth(),
+                       height=self.master.winfo_screenheight(),
                        background="white")
 
         self.master.configure(background="white")
         self.master.state("zoomed")
 
-        self.master.title("Menu Inicial")
+        self.master.title("Menu Iniciar")
 
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
         self.imagemTitulo = PhotoImage(file=f"{pathName}/Views/img/titulo.png")
@@ -53,7 +52,6 @@ class MenuIniciar(Frame):
         self.pack()
 
     def iniciarPartida(self):
-        rootIniciarJogada = Toplevel()
-        rootIniciarJogada.protocol("WM_DELETE_WINDOW", self.mainRoot.destroy)
-        IniciarJogada(rootIniciarJogada, self.master, self.mainRoot)
-        self.master.withdraw()
+        qtJogadores = self.qtJogadoresEscala.get()
+        self.interface.iniciarPartida(qtJogadores)
+

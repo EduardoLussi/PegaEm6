@@ -3,15 +3,16 @@ from os import path
 
 
 class Fileira(Frame):
-    def __init__(self, master, qtCartas=5):
-        Frame.__init__(self, master=master)
-        pathName = path.abspath(path.dirname('')).replace("\\", "/")
-        self.cartas = [PhotoImage(file=f"{pathName}/Views/img/cartas/9.png")] * qtCartas
-        self.atualizarCartas()
+    def __init__(self, master):
+        Frame.__init__(self, master=master, bg='white')
+        self.imgCartas = [PhotoImage() for _ in range(5)]
+        self.cartas = [Label(self, bg='white', cursor="hand2") for _ in range(5)]
+        for i in range(5):
+            self.cartas[i].grid(row=0, column=i)
 
-    def atualizarCartas(self):
-        for i, carta in enumerate(self.cartas):
-            lblCarta = Label(self, image=carta, bg='white', cursor="hand2")
-            lblCarta.bind("<Enter>", lblCarta.configure(fg="#ead215"))
-            lblCarta.bind("<Leave>", lblCarta.configure(fg="white"))
-            lblCarta.grid(row=0, column=i)
+    def atualizarCartas(self, fileira):
+        pathName = path.abspath(path.dirname('')).replace("\\", "/")
+        for i, carta in enumerate(fileira.cartas):
+            self.imgCartas[i].configure(file=f"{pathName}/Views/img/cartas/{carta.numero}.png")
+            self.cartas[i].configure(image=self.imgCartas[i])
+            

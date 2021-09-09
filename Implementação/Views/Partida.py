@@ -8,14 +8,14 @@ from os import path
 
 
 class Partida(Frame):
-    def __init__(self, master, parent_root, mainRoot):
-        self.parent_root = parent_root
-        self.mainRoot = mainRoot
+    def __init__(self, master, interface):
+        self.master = master
+        self.interface= interface
 
         Frame.__init__(self,
                        master=master,
-                       width=self.parent_root.winfo_screenwidth(),
-                       height=self.parent_root.winfo_screenheight(),
+                       width=self.master.winfo_screenwidth(),
+                       height=self.master.winfo_screenheight(),
                        background="white")
 
         self.master.configure(background="white")
@@ -24,7 +24,7 @@ class Partida(Frame):
         self.master.title("Mesa")
 
         self.frMesa = Mesa(self)
-        self.frMesa.place(relx=0.16, rely=0.34, anchor=CENTER)
+        self.frMesa.place(relx=0.03, rely=0.34, anchor=W)
 
         self.frVez = Frame(self, bg='white')
 
@@ -59,7 +59,7 @@ class Partida(Frame):
                            activebackground="#ead215",
                            bg="white",
                            cursor="hand2",
-                           command=self.jogarCarta)
+                           command=self.escolherCarta)
             carta.grid(row=0, column=i)
         self.frMao.place(relx=0.5, rely=0.82, anchor=CENTER)
 
@@ -77,13 +77,23 @@ class Partida(Frame):
 
         self.pack()
 
-    def restart(self, e):
-        self.mainRoot.deiconify()
-        self.master.withdraw()
+    def atualizarModoMesa(self, modo):
+        if modo:
+            for child in self.frMao.winfo_children():
+                child.configure(state="normal")
+        else:
+            for child in self.frMao.winfo_children():
+                child.configure(state="disable")
 
-    def jogarCarta(self):
-        rootResultado = Toplevel()
-        rootResultado.protocol("WM_DELETE_WINDOW", self.mainRoot.destroy)
-        Resultado(rootResultado, self.master, self.mainRoot)
-        self.master.withdraw()
+    def atualizarFileirasMesa(self, fileiras):
+        self.frMesa.atualizarFileirasMesa(fileiras)
+
+    def definirJogadorAtual(self, jogador):
+        self.lblVez.configure(text=f"Vez de {jogador.nome}")
+
+    def restart(self, e):
+        ...
+
+    def escolherCarta(self):
+        self.interface.escolherCarta(None)
 
