@@ -1,3 +1,4 @@
+from Models.Lance import Lance
 from tkinter import *
 from Views.MenuIniciar import MenuIniciar
 from Views.IniciarLance import IniciarLance
@@ -65,8 +66,23 @@ class AtorJogador:
         self.rootIniciarLance.withdraw()
     
     def escolherCarta(self, carta):
-        self.rootResultado.state("zoomed")
-        self.rootResultado.deiconify()
+        jogadorAtual = self.mesa.jogadorAtual
+
+        self.mesa.incluirLance(Lance(carta, jogadorAtual))
+        jogadorAtual.mao.remove(carta)
+
+        ultimoJogador = self.mesa.ehUltimoJogador()
+
+        if ultimoJogador:
+            ...# Falta essa parte
+        else:
+            self.mesa.definirProxJogador()
+
+        jogadorAtual = self.mesa.jogadorAtual
+        self.telaIniciarLance.definirJogadorAtual(jogadorAtual)
+
+        self.rootIniciarLance.state("zoomed")
+        self.rootIniciarLance.deiconify()
         self.rootMesa.withdraw()
 
 

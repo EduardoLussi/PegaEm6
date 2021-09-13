@@ -60,4 +60,17 @@ class Mesa:
     def obterProximoJogador(self):
         i = (self.jogadores.index(self.jogadorAtual) + 1) % len(self.jogadores)
         return self.jogadores[i]
-        
+    
+    def incluirLance(self, lance):
+        cartaLance = lance.carta.numero
+        for i in range(len(self.lances)):
+            cartaLanceAtual = self.lances[i].carta.numero
+            if cartaLanceAtual > cartaLance:
+                self.lances.insert(i, lance)
+                return
+    
+    def ehUltimoJogador(self):
+        return self.jogadorAtual == self.jogadores[-1]
+    
+    def definirProxJogador(self):
+        self.jogadorAtual = self.obterProximoJogador()

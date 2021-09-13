@@ -26,25 +26,7 @@ class Partida(Frame):
         self.frMesa = Mesa(self)
         self.frMesa.place(relx=0.03, rely=0.34, anchor=W)
 
-        self.frVez = Frame(self, bg='white')
-
-        self.lblVez = Label(self.frVez, text="")
-        self.lblVez.configure(font=("Century Gothic", 20),
-                                  bg="white",
-                                  fg="#0e6fb6")
-        self.lblVez.pack(anchor=E)
-
-        self.lblProxVez = Label(self.frVez, text="")
-        self.lblProxVez.configure(font=("Century Gothic", 20),
-                                  bg="white",
-                                  fg="#0e6fb6")
-        self.lblProxVez.pack(anchor=E)
-
-        self.frLinha = Frame(self.frVez, background='#ead215', height=3, width=500)
-        self.frLinha.pack(anchor=E, pady=20)
-
-        self.frVez.place(relx=0.85, rely=0.09, anchor=CENTER)
-
+        # Placar de informações
         self.placar = Placar(self)
         self.placar.place(relx=0.98, rely=0.3, anchor=E)
 
@@ -79,16 +61,16 @@ class Partida(Frame):
         self.frMesa.atualizarFileirasMesa(fileiras)
 
     def definirJogadorAtualMesa(self, jogadorAtual):
-        self.lblVez.configure(text=f"Vez de {jogadorAtual.nome}")
+        self.placar.lblVez.configure(text=f"Vez de {jogadorAtual.nome}")
 
     def definirProxJogadorMesa(self, proxJogador):
-        self.lblProxVez.configure(text=f"Próximo a jogar será {proxJogador.nome}")
+        self.placar.lblProxVez.configure(text=f"Próximo a jogar será {proxJogador.nome}")
 
     def restart(self, e):
         ...
 
-    def escolherCarta(self):
-        self.interface.escolherCarta(None)
+    def escolherCarta(self, carta):
+        self.interface.escolherCarta(carta)
 
     def definirCartasJogador(self, cartas):
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
@@ -104,6 +86,5 @@ class Partida(Frame):
                                           activebackground="#ead215",
                                           bg="white",
                                           cursor="hand2",
-                                          command=self.escolherCarta))
+                                          command=lambda carta=cartas[i]: self.escolherCarta(carta)))
             self.maoJogador[i].grid(row=0, column=i)
-
