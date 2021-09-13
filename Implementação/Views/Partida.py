@@ -28,13 +28,13 @@ class Partida(Frame):
 
         self.frVez = Frame(self, bg='white')
 
-        self.lblVez = Label(self.frVez, text="Vez de jogador 1")
+        self.lblVez = Label(self.frVez, text="")
         self.lblVez.configure(font=("Century Gothic", 20),
                                   bg="white",
                                   fg="#0e6fb6")
         self.lblVez.pack(anchor=E)
 
-        self.lblProxVez = Label(self.frVez, text="Próximo a jogar será Jogador 2")
+        self.lblProxVez = Label(self.frVez, text="")
         self.lblProxVez.configure(font=("Century Gothic", 20),
                                   bg="white",
                                   fg="#0e6fb6")
@@ -49,18 +49,8 @@ class Partida(Frame):
         self.placar.place(relx=0.98, rely=0.3, anchor=E)
 
         self.frMao = Frame(self)
-        pathName = path.abspath(path.dirname('')).replace("\\", "/")
-        self.img = PhotoImage(file=f"{pathName}/Views/img/cartas/9.png")
-        for i in range(10):
-            carta = Button(self.frMao,
-                           image=self.img,
-                           relief="solid",
-                           bd=0,
-                           activebackground="#ead215",
-                           bg="white",
-                           cursor="hand2",
-                           command=self.escolherCarta)
-            carta.grid(row=0, column=i)
+        self.imgCartasMao = []
+        self.maoJogador = []
         self.frMao.place(relx=0.5, rely=0.82, anchor=CENTER)
 
         self.lblMessage = Label(self, text="Escolha sua carta")
@@ -88,12 +78,32 @@ class Partida(Frame):
     def atualizarFileirasMesa(self, fileiras):
         self.frMesa.atualizarFileirasMesa(fileiras)
 
-    def definirJogadorAtual(self, jogador):
-        self.lblVez.configure(text=f"Vez de {jogador.nome}")
+    def definirJogadorAtualMesa(self, jogadorAtual):
+        self.lblVez.configure(text=f"Vez de {jogadorAtual.nome}")
+
+    def definirProxJogadorMesa(self, proxJogador):
+        self.lblProxVez.configure(text=f"Próximo a jogar será {proxJogador.nome}")
 
     def restart(self, e):
         ...
 
     def escolherCarta(self):
         self.interface.escolherCarta(None)
+
+    def definirCartasJogador(self, cartas):
+        pathName = path.abspath(path.dirname('')).replace("\\", "/")
+
+        self.imgCartasMao.clear()
+        self.maoJogador.clear()
+        for i in range(len(cartas)):
+            self.imgCartasMao.append(PhotoImage(file=f"{pathName}/Views/img/cartas/{cartas[i].numero}.png"))
+            self.maoJogador.append(Button(self.frMao,
+                                          image=self.imgCartasMao[i],
+                                          relief="solid",
+                                          bd=0,
+                                          activebackground="#ead215",
+                                          bg="white",
+                                          cursor="hand2",
+                                          command=self.escolherCarta))
+            self.maoJogador[i].grid(row=0, column=i)
 

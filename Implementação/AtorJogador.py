@@ -56,6 +56,10 @@ class AtorJogador:
         
 
     def iniciarLance(self):
+        self.telaMesa.definirJogadorAtualMesa(self.mesa.jogadorAtual)
+        self.telaMesa.definirProxJogadorMesa(self.mesa.obterProximoJogador())
+        self.telaMesa.definirCartasJogador(self.mesa.jogadorAtual.mao)
+
         self.rootMesa.state("zoomed")
         self.rootMesa.deiconify()
         self.rootIniciarLance.withdraw()

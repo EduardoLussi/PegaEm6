@@ -52,10 +52,12 @@ class Mesa:
             fileira.cartas = [self.monte.pop(0)]
         
         for jogador in self.jogadores:
-            jogador.cartas = self.monte[:10]
+            jogador.mao = self.monte[:10]
             del self.monte[:10]
         
         self.jogadorAtual = self.jogadores[0]
         
-
+    def obterProximoJogador(self):
+        i = (self.jogadores.index(self.jogadorAtual) + 1) % len(self.jogadores)
+        return self.jogadores[i]
         
