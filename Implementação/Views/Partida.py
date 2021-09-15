@@ -23,24 +23,29 @@ class Partida(Frame):
 
         self.master.title("Mesa")
 
+        # Fileiras ===========================
         self.frMesa = Mesa(self)
         self.frMesa.place(relx=0.03, rely=0.34, anchor=W)
 
-        # Placar de informações
+        # Placar de informações ==============
         self.placar = Placar(self)
-        self.placar.place(relx=0.98, rely=0.3, anchor=E)
+        self.placar.place(relx=0.98, rely=0.03, anchor=NE)
 
+        # Mão do Jogador =====================
         self.frMao = Frame(self)
         self.imgCartasMao = []
         self.maoJogador = []
         self.frMao.place(relx=0.5, rely=0.82, anchor=CENTER)
 
+        # Mensagem de ação do jogador ========
         self.lblMessage = Label(self, text="Escolha sua carta")
         self.lblMessage.configure(font=("Century Gothic", 22),
                                   bg="white",
                                   fg="#0e6fb6")
         self.lblMessage.place(relx=0.5, rely=0.95, anchor=CENTER)
 
+        # Botão de reiniciar ================
+        # Caminho relativo atual
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
         self.imgRestart = PhotoImage(file=f"{pathName}/Views/img/refresh.png")
         self.lblRestart = Label(self, image=self.imgRestart, bg='white', cursor="hand2")
@@ -49,30 +54,36 @@ class Partida(Frame):
 
         self.pack()
 
+    # Recebe atualização do modo da mesa (Escolha de carta ou fileira)
     def atualizarModoMesa(self, modo):
-        if modo:
-            for child in self.frMao.winfo_children():
-                child.configure(state="normal")
-        else:
-            for child in self.frMao.winfo_children():
-                child.configure(state="disable")
+        # Necessário criar mecanismo para:
+        # modo = true: permitir click nos botões da mão do jogador e não permitir click nas fileiras
+        # modo = false: permitir click nas fileiras e não permitir click nos botões da mão do jogador
+        # Implementar durante caso de uso de escolha de fileira
+        ...
 
+    # Recebe atualização das fileiras da mesa
     def atualizarFileirasMesa(self, fileiras):
         self.frMesa.atualizarFileirasMesa(fileiras)
 
+    # Recebe atualização do jogador atual da mesa
     def definirJogadorAtualMesa(self, jogadorAtual):
         self.placar.lblVez.configure(text=f"Vez de {jogadorAtual.nome}")
 
+    # Recebe atualização do próximo jogador
     def definirProxJogadorMesa(self, proxJogador):
         self.placar.lblProxVez.configure(text=f"Próximo a jogar será {proxJogador.nome}")
 
     def restart(self, e):
         ...
 
+    # Envia carta escolhida
     def escolherCarta(self, carta):
         self.interface.escolherCarta(carta)
 
+    # Recebe nova mão do jogador
     def definirCartasJogador(self, cartas):
+        # Caminho relativo atual
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
 
         self.imgCartasMao.clear()
@@ -88,3 +99,15 @@ class Partida(Frame):
                                           cursor="hand2",
                                           command=lambda carta=cartas[i]: self.escolherCarta(carta)))
             self.maoJogador[i].grid(row=0, column=i)
+
+    # Recebe atualização dos últimos lances do placar
+    def atualizarUltimosLances(self, lances):
+        self.placar.atualizarUltimosLances(lances)
+    
+    # Recebe atualização no ranking do placar
+    def definirRanking(self, ranking):
+        self.placar.definirRanking(ranking)
+    
+    # Esconde os últimos lances do placar
+    def esconderUltimosLances(self):
+        self.placar.esconderUltimosLances()

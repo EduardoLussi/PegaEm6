@@ -10,9 +10,14 @@ class Fileira(Frame):
         for i in range(5):
             self.cartas[i].grid(row=0, column=i)
 
+    # Recebe atualização nas cartas da fileira
     def atualizarCartas(self, fileira):
+        # Caminho relativo atual
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
-        for i, carta in enumerate(fileira.cartas):
-            self.imgCartas[i].configure(file=f"{pathName}/Views/img/cartas/{carta.numero}.png")
-            self.cartas[i].configure(image=self.imgCartas[i])
+        for i in range(5):  # Redefine as imagens de cada label de acordo com a carta correspondente
+            if i < len(fileira.cartas):
+                self.imgCartas[i].configure(file=f"{pathName}/Views/img/cartas/{fileira.cartas[i].numero}.png")
+                self.cartas[i].configure(image=self.imgCartas[i])
+            else:   # Demais cartas não existem
+                self.cartas[i].configure(image="")
             

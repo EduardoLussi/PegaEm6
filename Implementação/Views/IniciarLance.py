@@ -20,6 +20,7 @@ class IniciarLance(Frame):
 
         self.master.title("Iniciar Jogada")
 
+        # Título principal: Jogador da vez ==============================
         self.frVez = Frame(self, bg='white')
 
         self.lblNomeJogador = Button(self.frVez)
@@ -35,15 +36,18 @@ class IniciarLance(Frame):
 
         self.frVez.place(relx=0.5, rely=0.4, anchor=CENTER)
 
+        # Label que informa possibilidade de edição de nome ============
         self.lblEditarNome = Label(self, text=f'Você pode editar seu nome clicando em Vez de')
         self.lblEditarNome.configure(font=("Century Gothic", 15),
                                      bg="white",
                                      fg="#0e6fb6")
         self.lblEditarNome.place(relx=0.98, rely=0.97, anchor=SE)
 
+        # Botão de iniciar lance ======================================
         self.botao = Botao(self, "Continuar", command=self.iniciarLance)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
+        # Botão de reiniciar ==========================================
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
         self.imgRestart = PhotoImage(file=f"{pathName}/Views/img/refresh.png")
         self.lblRestart = Label(self, image=self.imgRestart, bg='white', cursor="hand2")
@@ -55,13 +59,16 @@ class IniciarLance(Frame):
     def restart(self, e):
         ...
 
+    # Recebe atualização do jogador atual
     def definirJogadorAtual(self, jogador):
         self.lblNomeJogador.configure(text=f"Vez de {jogador.nome}")
         self.lblEditarNome.configure(text=f'Você pode editar seu nome clicando em Vez de {jogador.nome}')
 
+    # Inicia o lance
     def iniciarLance(self):
         self.interface.iniciarLance()
 
+    # Mostra campos para alterar o nome do jogador atual
     def alterarNome(self):
         self.lblEntrada = Label(self, text="Insira o novo nome:")
         self.lblEntrada.configure(font=("Century Gothic", 16),
@@ -78,6 +85,7 @@ class IniciarLance(Frame):
         self.botaoEntrada = Botao(self, "Ok", command=self.atualizarNome)
         self.botaoEntrada.place(relx=0.82, rely=0.6, anchor=CENTER)
 
+    # Envia requisição de atualização do nome do jogador
     def atualizarNome(self):
         self.lblEntrada.destroy()
         self.lblNomeJogador.configure(text=f"Vez de {self.entrada.get()}")

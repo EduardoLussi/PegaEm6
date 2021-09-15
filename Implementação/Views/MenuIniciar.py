@@ -19,13 +19,15 @@ class MenuIniciar(Frame):
 
         self.master.title("Menu Iniciar")
 
+        # Título =============================================
+        # Caminho relativo atual
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
         self.imagemTitulo = PhotoImage(file=f"{pathName}/Views/img/titulo.png")
-
         self.titulo = Label(self, image=self.imagemTitulo)
         self.titulo.configure(background="white")
         self.titulo.place(relx=0.5, rely=0.15, anchor=CENTER)
 
+        # Seleção quantidade de jogadores ====================
         self.frQtJogadores = Frame(self, bg="white")
 
         self.qtJogadoresTexto = Label(self.frQtJogadores, text="Escolha a quantidade de jogadores:")
@@ -46,11 +48,13 @@ class MenuIniciar(Frame):
 
         self.frQtJogadores.place(relx=0.5, rely=0.5, anchor=CENTER)
 
+        # Botão de jogar ===================================
         self.botao = Botao(self, "Jogar", command=self.iniciarPartida)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
         self.pack()
 
+    # Inicia uma nova partida com uma determinada quantidade de jogadores
     def iniciarPartida(self):
         qtJogadores = self.qtJogadoresEscala.get()
         self.interface.iniciarPartida(qtJogadores)
