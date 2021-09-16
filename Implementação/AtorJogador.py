@@ -92,7 +92,6 @@ class AtorJogador:
         
             if lanceInvalido:   # Necessária uma rodada de escolha de fileira
                 self.mesa.jogadorAtual = lanceInvalido.jogador
-                self.telaMesa.esconderUltimosLances()
                 self.telaMesa.atualizarModoMesa(False)
             else:   # Todos os lances puderam ser inseridos
                 # Atualiza fileiras da interface
@@ -101,6 +100,8 @@ class AtorJogador:
 
                 if self.mesa.jogadorAtual.mao == []:    # Fim da rodada
                     if self.mesa.avaliarFimPartida():   # Fim da partida
+                        self.telaResultado.definirRankingFinal(self.mesa.obterRanking())
+
                         # Troca para a tela de resultado
                         self.rootResultado.state("zoomed")
                         self.rootResultado.deiconify()
@@ -108,6 +109,7 @@ class AtorJogador:
                         return
                     else:   # Partida ainda não acabou
                         self.mesa.redistribuirCartas()
+                        self.telaMesa.atualizarFileirasMesa(self.mesa.fileiras)
         else:   # Turno ainda não acabou, há jogadores para escolherem cartas
             self.mesa.definirProxJogador()
 
@@ -119,6 +121,38 @@ class AtorJogador:
         self.rootIniciarLance.deiconify()
         self.rootMesa.withdraw()
 
+    # Fileira escolhida para ser substituída
+    def redefinirFileira(self, fileira):
+        self.mesa.redefinirFileira(fileira)
+
+        self.telaMesa.atualizarModoMesa(True)   # Modo escolha de carta
+
+        self.mesa.avaliarLances()   # Todos os demais lances são válidos
+        
+        self.telaMesa.definirRanking(self.mesa.obterRanking())
+
+        self.mesa.jogadorAtual = self.mesa.jogadores[0] # Próximo jogador é o 1º da lista
+
+        if self.mesa.jogadorAtual.mao == []:    # Fim da rodada
+            if self.mesa.avaliarFimPartida():   # Fim da partida
+                self.telaResultado.definirRankingFinal(self.mesa.obterRanking())
+
+                # Troca para a tela de resultado
+                self.rootResultado.state("zoomed")
+                self.rootResultado.deiconify()
+                self.rootMesa.withdraw()
+                return
+            else:   # Partida ainda não acabou
+                self.mesa.redistribuirCartas()
+
+        self.telaMesa.atualizarFileirasMesa(self.mesa.fileiras)
+
+        self.telaIniciarLance.definirJogadorAtual(self.mesa.jogadorAtual)
+        
+        # Troca para a tela de transição entre jogadores
+        self.rootIniciarLance.state("zoomed")
+        self.rootIniciarLance.deiconify()
+        self.rootMesa.withdraw()
 
 if __name__ == '__main__':
     AtorJogador()

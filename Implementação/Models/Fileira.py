@@ -7,3 +7,9 @@ class Fileira:
     
     def inserirCarta(self, carta):
         self.cartas.append(carta)
+    
+    def obterPontuacao(self):
+        pontuacao = 0
+        for carta in self.cartas:
+            pontuacao += carta.pontuacao
+        return pontuacao

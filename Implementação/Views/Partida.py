@@ -33,12 +33,17 @@ class Partida(Frame):
 
         # Mão do Jogador =====================
         self.frMao = Frame(self)
-        self.imgCartasMao = []
-        self.maoJogador = []
+        self.imgCartasMao = [PhotoImage() for _ in range(10)]
+        self.maoJogador = [Button(self.frMao,
+                                  relief="solid",
+                                  bd=0,
+                                  activebackground="#ead215",
+                                  bg="white",
+                                  cursor="hand2") for _ in range(10)]
         self.frMao.place(relx=0.5, rely=0.82, anchor=CENTER)
 
         # Mensagem de ação do jogador ========
-        self.lblMessage = Label(self, text="Escolha sua carta")
+        self.lblMessage = Label(self, text="Escolha uma carta")
         self.lblMessage.configure(font=("Century Gothic", 22),
                                   bg="white",
                                   fg="#0e6fb6")
@@ -56,11 +61,18 @@ class Partida(Frame):
 
     # Recebe atualização do modo da mesa (Escolha de carta ou fileira)
     def atualizarModoMesa(self, modo):
-        # Necessário criar mecanismo para:
-        # modo = true: permitir click nos botões da mão do jogador e não permitir click nas fileiras
-        # modo = false: permitir click nas fileiras e não permitir click nos botões da mão do jogador
-        # Implementar durante caso de uso de escolha de fileira
-        ...
+        if modo:    # Modo escolha de carta
+            self.frMesa.esconderEscolhaFileira()    # Esconde botões de escolha de fileira
+            for i in range(len(self.maoJogador)):   # Ativa botões das cartas
+                self.maoJogador[i].configure(state=NORMAL)
+            # Muda mensagem para escolha de carta
+            self.lblMessage.configure(text="Escolha uma carta")
+        else:
+            self.frMesa.mostrarEscolhaFileira() # Mostra botões de escolha de fileira
+            for i in range(len(self.maoJogador)):   # Desativa botões das cartas
+                self.maoJogador[i].configure(state=DISABLED)
+            # Muda mensagem para escolha de carta
+            self.lblMessage.configure(text="Escolha uma fileira")
 
     # Recebe atualização das fileiras da mesa
     def atualizarFileirasMesa(self, fileiras):
@@ -86,19 +98,14 @@ class Partida(Frame):
         # Caminho relativo atual
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
 
-        self.imgCartasMao.clear()
-        self.maoJogador.clear()
-        for i in range(len(cartas)):
-            self.imgCartasMao.append(PhotoImage(file=f"{pathName}/Views/img/cartas/{cartas[i].numero}.png"))
-            self.maoJogador.append(Button(self.frMao,
-                                          image=self.imgCartasMao[i],
-                                          relief="solid",
-                                          bd=0,
-                                          activebackground="#ead215",
-                                          bg="white",
-                                          cursor="hand2",
-                                          command=lambda carta=cartas[i]: self.escolherCarta(carta)))
-            self.maoJogador[i].grid(row=0, column=i)
+        for i in range(10):
+            if i < len(cartas):
+                self.imgCartasMao[i].configure(file=f"{pathName}/Views/img/cartas/{cartas[i].numero}.png")
+                self.maoJogador[i].configure(image=self.imgCartasMao[i],
+                                            command=lambda carta=cartas[i]: self.escolherCarta(carta))
+                self.maoJogador[i].grid(row=0, column=i)
+            else:
+                self.maoJogador[i].grid_forget()
 
     # Recebe atualização dos últimos lances do placar
     def atualizarUltimosLances(self, lances):
@@ -108,6 +115,6 @@ class Partida(Frame):
     def definirRanking(self, ranking):
         self.placar.definirRanking(ranking)
     
-    # Esconde os últimos lances do placar
-    def esconderUltimosLances(self):
-        self.placar.esconderUltimosLances()
+    # Redefine fileira
+    def redefinirFileira(self, i):
+        self.interface.redefinirFileira(i)

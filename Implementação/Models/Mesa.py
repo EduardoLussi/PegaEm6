@@ -150,6 +150,12 @@ class Mesa:
     # Se encontrar, é o fim da partida
     def avaliarFimPartida(self):
         for jogador in self.jogadores:
-            if jogador.pontuacao > 66:
+            if jogador.pontuacao > 10:
                 return True
         return False
+    
+    def redefinirFileira(self, i):
+        self.jogadorAtual.pontuacao += self.fileiras[i].obterPontuacao()
+        self.fileiras[i].limpar()
+        self.fileiras[i].inserirCarta(self.lances[0].carta)
+        self.removerLance(self.lances[0])

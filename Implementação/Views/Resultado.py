@@ -31,10 +31,17 @@ class Resultado(Frame):
         self.lblVencedor.configure(font=("Century Gothic", 35),
                                         bg="white",
                                         fg="#0e6fb6")
-        self.lblVencedor.place(relx=0.5, rely=0.4, anchor=CENTER)
+        self.lblVencedor.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-        self.placar = Placar(self)
-        self.placar.place(relx=0.5, rely=0.6, anchor=CENTER)
+        self.lblsJogador = []
+
+        self.frRanking = Frame(self, bg='white')
+
+        self.imgClassificacao = PhotoImage(file=f"{pathName}/Views/img/classificacao.png")
+        self.lblClassificacao = Label(self.frRanking, image=self.imgClassificacao, bg="white")
+        self.lblClassificacao.pack(anchor=E, pady=10)
+
+        self.frRanking.place(anchor=NE, relx=0.98, rely=0.37)
 
         self.botao = Botao(self, "Menu Principal", command=self.reiniciar)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
@@ -43,3 +50,17 @@ class Resultado(Frame):
 
     def reiniciar(self):
         ...
+
+    def definirRankingFinal(self, ranking):
+        self.lblVencedor.configure(text=f"{ranking[0].nome} venceu a partida!")
+
+        for lbl in self.lblsJogador:    # Destrói labels dos jogadores do ranking existentes
+            lbl.destroy()
+
+        self.lblsJogador = []
+        for i in range(len(ranking)):   # Cria novas labels para cada jogador
+            self.lblsJogador.append(Label(self.frRanking, text=f"{ranking[i].nome}: {ranking[i].pontuacao} pontos"))
+            self.lblsJogador[i].configure(font=("Century Gothic", 15),
+                                 bg="white",
+                                 fg="#0e6fb6")
+            self.lblsJogador[i].pack(anchor=E)
