@@ -51,63 +51,46 @@ class IniciarLance(Frame):
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
         self.imgRestart = PhotoImage(file=f"{pathName}/Views/img/refresh.png")
         self.lblRestart = Label(self, image=self.imgRestart, bg='white', cursor="hand2")
-        self.lblRestart.bind("<Button-1>", self.reiniciar)
+        self.lblRestart.bind("<Button-1>", self.restart)
         self.lblRestart.place(relx=0.04, rely=0.93, anchor=CENTER)
-
-        self.lblInserirNome = None
 
         self.pack()
 
-    def reiniciar(self, e):
-        if self.lblInserirNome is not None:
-            self.novoNome.delete(0, 'end')
-            self.novoNome.destroy()
-            self.botaoEntrada.destroy()
-            self.lblInserirNome.destroy()
-            self.lblInserirNome = None
-        self.interface.telaMesa.reiniciar(None)
+    def restart(self, e):
+        ...
 
     # Recebe atualização do jogador atual
     def definirJogadorAtual(self, jogador):
         self.lblNomeJogador.configure(text=f"Vez de {jogador.nome}")
-        if self.lblEditarNome is not None:
-            self.lblEditarNome.configure(text=f'Você pode editar seu nome clicando em Vez de {jogador.nome}')
+        self.lblEditarNome.configure(text=f'Você pode editar seu nome clicando em Vez de {jogador.nome}')
 
     # Inicia o lance
     def iniciarLance(self):
-        if self.lblInserirNome is not None:
-            self.novoNome.delete(0, 'end')
-            self.novoNome.destroy()
-            self.botaoEntrada.destroy()
-            self.lblInserirNome.destroy()
-            self.lblInserirNome = None
         self.interface.iniciarLance()
 
     # Mostra campos para alterar o nome do jogador atual
     def alterarNome(self):
-        self.lblInserirNome = Label(self, text="Insira o novo nome:")
-        self.lblInserirNome.configure(font=("Century Gothic", 16),
+        self.lblEntrada = Label(self, text="Insira o novo nome:")
+        self.lblEntrada.configure(font=("Century Gothic", 16),
                                   bg="white",
                                   fg="#0e6fb6")
-        self.lblInserirNome.place(relx=0.45, rely=0.6, anchor=CENTER)
+        self.lblEntrada.place(relx=0.45, rely=0.6, anchor=CENTER)
 
-        self.novoNome = Entry(self, text="Insira o seu novo nome:")
-        self.novoNome.configure(font=("Century Gothic", 16),
+        self.entrada = Entry(self, text="Insira o seu novo nome:")
+        self.entrada.configure(font=("Century Gothic", 16),
                                width=30,
                                bg="lightgray")
-        self.novoNome.place(relx=0.65, rely=0.6, anchor=CENTER)
+        self.entrada.place(relx=0.65, rely=0.6, anchor=CENTER)
 
         self.botaoEntrada = Botao(self, "Ok", command=self.atualizarNome)
         self.botaoEntrada.place(relx=0.82, rely=0.6, anchor=CENTER)
 
     # Envia requisição de atualização do nome do jogador
     def atualizarNome(self):
-        self.lblInserirNome.destroy()
-        self.lblInserirNome = None
-        self.interface.mesa.jogadorAtual.setNome(self.novoNome.get())
-        self.lblNomeJogador.configure(text=f"Vez de {self.novoNome.get()}")
-        self.lblEditarNome.configure(text=f"Você pode editar seu nome clicando em Vez de {self.novoNome.get()}")
-        self.novoNome.delete(0, 'end')
-        self.novoNome.destroy()
+        self.lblEntrada.destroy()
+        self.lblNomeJogador.configure(text=f"Vez de {self.entrada.get()}")
+        self.lblEditarNome.configure(text=f"Você pode editar seu nome clicando em Vez de {self.entrada.get()}")
+        self.entrada.delete(0, 'end')
+        self.entrada.destroy()
         self.botaoEntrada.destroy()
 

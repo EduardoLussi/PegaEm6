@@ -98,11 +98,6 @@ class AtorJogador:
                 self.telaMesa.atualizarFileirasMesa(self.mesa.fileiras)
                 self.mesa.definirProxJogador()
 
-            if self.telaIniciarLance.lblEditarNome is not None:
-                self.telaIniciarLance.lblNomeJogador["state"] = "disabled"
-                self.telaIniciarLance.lblEditarNome.destroy()
-                self.telaIniciarLance.lblEditarNome = None
-
                 if self.mesa.jogadorAtual.mao == []:    # Fim da rodada
                     if self.mesa.avaliarFimPartida():   # Fim da partida
                         self.telaResultado.definirRankingFinal(self.mesa.obterRanking())

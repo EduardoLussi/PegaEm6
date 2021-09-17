@@ -18,7 +18,7 @@ class Resultado(Frame):
         self.master.configure(background="white")
         self.master.state("zoomed")
 
-        self.master.title("Resultado")
+        self.master.title("Menu Inicial")
 
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
         self.imagemTitulo = PhotoImage(file=f"{pathName}/Views/img/titulo.png")
@@ -43,13 +43,13 @@ class Resultado(Frame):
 
         self.frRanking.place(anchor=NE, relx=0.98, rely=0.37)
 
-        self.botao = Botao(self, "Reiniciar", command=self.reiniciar)
+        self.botao = Botao(self, "Menu Principal", command=self.reiniciar)
         self.botao.place(relx=0.5, rely=0.85, anchor=CENTER)
 
         self.pack()
 
     def reiniciar(self):
-        self.interface.telaMesa.reiniciar(None)
+        ...
 
     def definirRankingFinal(self, ranking):
         self.lblVencedor.configure(text=f"{ranking[0].nome} venceu a partida!")

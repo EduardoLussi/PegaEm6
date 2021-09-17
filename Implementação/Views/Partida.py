@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import messagebox
 from Views.Components.Mesa import Mesa
 from Views.Components.Fileira import Fileira
 from Views.Components.Placar import Placar
@@ -8,11 +7,10 @@ from Views.Components.Botao import Botao
 from os import path
 
 
-
 class Partida(Frame):
     def __init__(self, master, interface):
         self.master = master
-        self.interface = interface
+        self.interface= interface
 
         Frame.__init__(self,
                        master=master,
@@ -56,7 +54,7 @@ class Partida(Frame):
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
         self.imgRestart = PhotoImage(file=f"{pathName}/Views/img/refresh.png")
         self.lblRestart = Label(self, image=self.imgRestart, bg='white', cursor="hand2")
-        self.lblRestart.bind("<Button-1>", self.reiniciar)
+        self.lblRestart.bind("<Button-1>", self.restart)
         self.lblRestart.place(relx=0.04, rely=0.93, anchor=CENTER)
 
         self.pack()
@@ -88,21 +86,8 @@ class Partida(Frame):
     def definirProxJogadorMesa(self, proxJogador):
         self.placar.lblProxVez.configure(text=f"Próximo a jogar será {proxJogador.nome}")
 
-    def reiniciar(self, e):
-        redefinir = messagebox.askyesnocancel(title="Reiniciar", message="Deseja redefinir os jogadores da partida")
-        if redefinir is not None:
-            self.atualizarUltimosLances([])
-            self.definirRanking([])
-            self.interface.telaIniciarLance.lblNomeJogador["state"] = "normal"
-            self.interface.telaIniciarLance.lblEditarNome = Label(self.interface.telaIniciarLance, text=f'Você pode editar seu nome clicando em Vez de')
-            self.interface.telaIniciarLance.lblEditarNome.configure(font=("Century Gothic", 15),
-                                         bg="white",
-                                         fg="#0e6fb6")
-            self.interface.telaIniciarLance.lblEditarNome.place(relx=0.98, rely=0.97, anchor=SE)
-            if redefinir:
-                self.notificarInicio()
-            elif not redefinir:
-                self.interface.redefinirPartida()
+    def restart(self, e):
+        ...
 
     # Envia carta escolhida
     def escolherCarta(self, carta):
@@ -133,9 +118,3 @@ class Partida(Frame):
     # Redefine fileira
     def redefinirFileira(self, i):
         self.interface.redefinirFileira(i)
-
-    # Exibe a tela inicial
-    def notificarInicio(self):
-        self.interface.mainWindow.state("zoomed")
-        self.interface.mainWindow.deiconify()
-        self.interface.rootMesa.withdraw()
