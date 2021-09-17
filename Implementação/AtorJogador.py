@@ -158,5 +158,8 @@ class AtorJogador:
         self.rootIniciarLance.deiconify()
         self.rootMesa.withdraw()
 
+    def alterarNome(self, nome):
+        self.mesa.jogadorAtual.nome = nome
+
 if __name__ == '__main__':
     AtorJogador()

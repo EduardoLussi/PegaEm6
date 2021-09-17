@@ -31,7 +31,7 @@ class IniciarLance(Frame):
                                         bd=0,
                                         cursor="hand2",
                                         text="Vez de ",
-                                        command=self.alterarNome)
+                                        command=self.mostrarEntradaNome)
         self.lblNomeJogador.grid(row=0, column=1)
 
         self.frVez.place(relx=0.5, rely=0.4, anchor=CENTER)
@@ -84,7 +84,7 @@ class IniciarLance(Frame):
         self.interface.iniciarLance()
 
     # Mostra campos para alterar o nome do jogador atual
-    def alterarNome(self):
+    def mostrarEntradaNome(self):
         self.lblInserirNome = Label(self, text="Insira o novo nome:")
         self.lblInserirNome.configure(font=("Century Gothic", 16),
                                   bg="white",
@@ -97,14 +97,14 @@ class IniciarLance(Frame):
                                bg="lightgray")
         self.novoNome.place(relx=0.65, rely=0.6, anchor=CENTER)
 
-        self.botaoEntrada = Botao(self, "Ok", command=self.atualizarNome)
+        self.botaoEntrada = Botao(self, "Ok", command=self.alterarNome)
         self.botaoEntrada.place(relx=0.82, rely=0.6, anchor=CENTER)
 
     # Envia requisição de atualização do nome do jogador
-    def atualizarNome(self):
+    def alterarNome(self):
         self.lblInserirNome.destroy()
         self.lblInserirNome = None
-        self.interface.mesa.jogadorAtual.setNome(self.novoNome.get())
+        self.interface.alterarNome(self.novoNome.get())
         self.lblNomeJogador.configure(text=f"Vez de {self.novoNome.get()}")
         self.lblEditarNome.configure(text=f"Você pode editar seu nome clicando em Vez de {self.novoNome.get()}")
         self.novoNome.delete(0, 'end')
