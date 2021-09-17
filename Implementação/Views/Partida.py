@@ -112,7 +112,6 @@ class Partida(Frame):
     def definirCartasJogador(self, cartas):
         # Caminho relativo atual
         pathName = path.abspath(path.dirname('')).replace("\\", "/")
-
         for i in range(10):
             if i < len(cartas):
                 self.imgCartasMao[i].configure(file=f"{pathName}/Views/img/cartas/{cartas[i].numero}.png")

@@ -39,7 +39,6 @@ class AtorJogador:
     # Redistribui as cartas e envia as atualizações à interface
     def redistribuirCartas(self):
         self.mesa.redistribuirCartas()
-
         self.telaMesa.atualizarModoMesa(True)
         self.telaMesa.atualizarFileirasMesa(self.mesa.fileiras)
 

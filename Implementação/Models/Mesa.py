@@ -150,7 +150,7 @@ class Mesa:
     # Se encontrar, é o fim da partida
     def avaliarFimPartida(self):
         for jogador in self.jogadores:
-            if jogador.pontuacao > 10:
+            if jogador.pontuacao > 66:
                 return True
         return False
     
