@@ -89,6 +89,11 @@ class AtorJogador:
             # Atualza o ranking no placar da interface
             ranking = self.mesa.obterRanking()
             self.telaMesa.definirRanking(ranking)
+
+            if self.telaIniciarLance.lblEditarNome is not None:
+                self.telaIniciarLance.lblNomeJogador["state"] = "disabled"
+                self.telaIniciarLance.lblEditarNome.destroy()
+                self.telaIniciarLance.lblEditarNome = None
         
             if lanceInvalido:   # Necessária uma rodada de escolha de fileira
                 self.mesa.jogadorAtual = lanceInvalido.jogador
