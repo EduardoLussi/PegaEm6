@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from Views.Components.Botao import Botao
 from Views.Components.Placar import Placar
 from os import path
@@ -49,7 +50,8 @@ class Resultado(Frame):
         self.pack()
 
     def reiniciar(self):
-        self.interface.telaMesa.reiniciar(None)
+        redefinir = messagebox.askyesnocancel(title="Reiniciar", message="Deseja redefinir os jogadores da partida")
+        self.interface.reiniciar(self.master, redefinir)
 
     def definirRankingFinal(self, ranking):
         self.lblVencedor.configure(text=f"{ranking[0].nome} venceu a partida!")

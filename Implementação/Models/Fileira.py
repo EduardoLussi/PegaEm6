@@ -11,5 +11,12 @@ class Fileira:
     def obterPontuacao(self):
         pontuacao = 0
         for carta in self.cartas:
-            pontuacao += carta.pontuacao
+            pontuacao += carta.getPontuacao()
         return pontuacao
+    
+    # Métodos Get e Set
+    def getCartas(self):
+        return self.cartas
+
+    def setCartas(self, cartas):
+        self.cartas = cartas

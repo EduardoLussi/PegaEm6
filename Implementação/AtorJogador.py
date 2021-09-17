@@ -39,49 +39,59 @@ class AtorJogador:
     # Redistribui as cartas e envia as atualizações à interface
     def redistribuirCartas(self):
         self.mesa.redistribuirCartas()
-        self.telaMesa.atualizarModoMesa(True)
-        self.telaMesa.atualizarFileirasMesa(self.mesa.fileiras)
+        self.telaMesa.atualizarModoMesa(True)   # Modo escolha de carta
+        
+        fileiras = self.mesa.getFileiras()
+        self.telaMesa.atualizarFileirasMesa(fileiras)
 
     # Redefine a partida, redistribui as cartas e atualiza as informações na interface
     def redefinirPartida(self):
         self.mesa.redefinirPartida()
         self.redistribuirCartas()
-        self.telaIniciarLance.definirJogadorAtual(self.mesa.jogadorAtual)
+
+        jogadorAtual = self.mesa.getJogadorAtual()
+        self.telaIniciarLance.definirJogadorAtual(jogadorAtual)
+
+        self.telaMesa.definirRanking([])
+        self.telaMesa.atualizarUltimosLances([])
 
         # Troca para a tela de iniciar lance
-        self.mainWindow.withdraw()
-        self.rootIniciarLance.state("zoomed")
-        self.rootIniciarLance.deiconify()
+        self.mostrarTelaIniciarLance(self.mainWindow)
 
     # Inicia uma nova partida e a redefine
     def iniciarPartida(self, qtJogadores):
         self.mesa.iniciarPartida(int(qtJogadores))
         self.redefinirPartida()
+        self.telaIniciarLance.habilitarAlterarNome()
         
     # Prepara a tela do jogador atual
     def iniciarLance(self):
         # Atualiza informações da mesa para o jogador atual
-        self.telaMesa.definirJogadorAtualMesa(self.mesa.jogadorAtual)
-        self.telaMesa.definirProxJogadorMesa(self.mesa.obterProximoJogador())
-        self.telaMesa.definirCartasJogador(self.mesa.jogadorAtual.mao)
+        jogadorAtual = self.mesa.getJogadorAtual()
+        self.telaMesa.definirJogadorAtualMesa(jogadorAtual)
+
+        proxJogador = self.mesa.obterProximoJogador()
+        self.telaMesa.definirProxJogadorMesa(proxJogador)
+
+        mao = jogadorAtual.getMao()
+        self.telaMesa.definirCartasJogador(mao)
 
         # Troca para a tela da mesa
-        self.rootMesa.state("zoomed")
-        self.rootMesa.deiconify()
-        self.rootIniciarLance.withdraw()
+        self.mostrarTelaPartida(self.rootIniciarLance)
     
     # Procedimento quando jogador escolhe uma carta
     def escolherCarta(self, carta):
-        jogadorAtual = self.mesa.jogadorAtual
+        jogadorAtual = self.mesa.getJogadorAtual()
 
         self.mesa.incluirLance(Lance(carta, jogadorAtual))  # Inserção ordenada
-        jogadorAtual.mao.remove(carta)
+        jogadorAtual.removerCarta(carta)
 
         ultimoJogador = self.mesa.ehUltimoJogador()
 
         if ultimoJogador:   # Fim do turno
             # Atualiza os últimos lances do placar da interface
-            self.telaMesa.atualizarUltimosLances(self.mesa.lances)
+            lances = self.mesa.getLances()
+            self.telaMesa.atualizarUltimosLances(lances)
 
             lanceInvalido = self.mesa.avaliarLances()
             
@@ -89,41 +99,40 @@ class AtorJogador:
             ranking = self.mesa.obterRanking()
             self.telaMesa.definirRanking(ranking)
 
-            if self.telaIniciarLance.lblEditarNome is not None:
-                self.telaIniciarLance.lblNomeJogador["state"] = "disabled"
-                self.telaIniciarLance.lblEditarNome.destroy()
-                self.telaIniciarLance.lblEditarNome = None
+            self.telaIniciarLance.desabilitarAlterarNome()
         
             if lanceInvalido:   # Necessária uma rodada de escolha de fileira
-                self.mesa.jogadorAtual = lanceInvalido.jogador
+                jogadorLanceInvalido = lanceInvalido.getJogador()
+                self.mesa.setJogadorAtual(jogadorLanceInvalido)
                 self.telaMesa.atualizarModoMesa(False)
             else:   # Todos os lances puderam ser inseridos
                 # Atualiza fileiras da interface
-                self.telaMesa.atualizarFileirasMesa(self.mesa.fileiras)
+                fileiras = self.mesa.getFileiras()
+                self.telaMesa.atualizarFileirasMesa(fileiras)
+
                 self.mesa.definirProxJogador()
 
-                if self.mesa.jogadorAtual.mao == []:    # Fim da rodada
+                jogadorAtual = self.mesa.getJogadorAtual()
+                mao = jogadorAtual.getMao()
+                if mao == []:    # Fim da rodada
                     if self.mesa.avaliarFimPartida():   # Fim da partida
                         self.telaResultado.definirRankingFinal(self.mesa.obterRanking())
-
-                        # Troca para a tela de resultado
-                        self.rootResultado.state("zoomed")
-                        self.rootResultado.deiconify()
-                        self.rootMesa.withdraw()
+                        self.mostrarTelaResultado(self.rootMesa)
                         return
                     else:   # Partida ainda não acabou
                         self.mesa.redistribuirCartas()
-                        self.telaMesa.atualizarFileirasMesa(self.mesa.fileiras)
+                        fileiras = self.mesa.getFileiras()
+                        self.telaMesa.atualizarFileirasMesa(fileiras)
         else:   # Turno ainda não acabou, há jogadores para escolherem cartas
             self.mesa.definirProxJogador()
 
         # Atualiza jogador atual na interface
-        self.telaIniciarLance.definirJogadorAtual(self.mesa.jogadorAtual)
+        jogadorAtual = self.mesa.getJogadorAtual()
+        self.telaIniciarLance.definirJogadorAtual(jogadorAtual)
 
         # Troca para a tela de transição entre jogadores
-        self.rootIniciarLance.state("zoomed")
-        self.rootIniciarLance.deiconify()
-        self.rootMesa.withdraw()
+        self.mostrarTelaIniciarLance(self.rootMesa)
+        
 
     # Fileira escolhida para ser substituída
     def redefinirFileira(self, fileira):
@@ -135,31 +144,62 @@ class AtorJogador:
         
         self.telaMesa.definirRanking(self.mesa.obterRanking())
 
-        self.mesa.jogadorAtual = self.mesa.jogadores[0] # Próximo jogador é o 1º da lista
+        jogadoresMesa = self.mesa.getJogadores()
+        self.mesa.setJogadorAtual(jogadoresMesa[0]) # Próximo jogador é o 1º da lista
 
-        if self.mesa.jogadorAtual.mao == []:    # Fim da rodada
+        jogadorAtual = self.mesa.getJogadorAtual()
+        mao = jogadorAtual.getMao()
+        if mao == []:    # Fim da rodada
             if self.mesa.avaliarFimPartida():   # Fim da partida
                 self.telaResultado.definirRankingFinal(self.mesa.obterRanking())
-
-                # Troca para a tela de resultado
-                self.rootResultado.state("zoomed")
-                self.rootResultado.deiconify()
-                self.rootMesa.withdraw()
+                self.mostrarTelaResultado(self.rootMesa)
                 return
             else:   # Partida ainda não acabou
                 self.mesa.redistribuirCartas()
+        
+        fileiras = self.mesa.getFileiras()
+        self.telaMesa.atualizarFileirasMesa(fileiras)
 
-        self.telaMesa.atualizarFileirasMesa(self.mesa.fileiras)
-
-        self.telaIniciarLance.definirJogadorAtual(self.mesa.jogadorAtual)
+        jogadorAtual = self.mesa.getJogadorAtual()
+        self.telaIniciarLance.definirJogadorAtual(jogadorAtual)
         
         # Troca para a tela de transição entre jogadores
-        self.rootIniciarLance.state("zoomed")
-        self.rootIniciarLance.deiconify()
-        self.rootMesa.withdraw()
+        self.mostrarTelaIniciarLance(self.rootMesa)
 
     def alterarNome(self, nome):
-        self.mesa.jogadorAtual.nome = nome
+        jogadorAtual = self.mesa.getJogadorAtual()
+        jogadorAtual.setNome(nome)
+
+    def reiniciar(self, rootTela, redefinir):
+        if redefinir is not None:
+            if redefinir:
+                self.mostrarTelaInicial(rootTela)
+            elif not redefinir:
+                rootTela.withdraw()
+                self.redefinirPartida()
+
+    # Trocas de tela ==============================
+
+    def mostrarTelaInicial(self, rootTela):
+        self.mainWindow.state("zoomed")
+        self.mainWindow.deiconify()
+        rootTela.withdraw()
+
+    def mostrarTelaResultado(self, rootTela):
+        self.rootResultado.state("zoomed")
+        self.rootResultado.deiconify()
+        rootTela.withdraw()
+    
+    def mostrarTelaIniciarLance(self, rootTela):
+        self.rootIniciarLance.state("zoomed")
+        self.rootIniciarLance.deiconify()
+        rootTela.withdraw()
+
+    def mostrarTelaPartida(self, rootTela):
+        self.rootMesa.state("zoomed")
+        self.rootMesa.deiconify()
+        rootTela.withdraw()
+
 
 if __name__ == '__main__':
     AtorJogador()

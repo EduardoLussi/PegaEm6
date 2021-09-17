@@ -5,14 +5,13 @@ from random import shuffle
 
 
 class Mesa:
-    def __init__(self, monte=[], fileiras=[Fileira() for _ in range(4)], jogadores=[], lances=[], jogadorAtual=None, modo=True):
+    def __init__(self, monte=[], fileiras=[Fileira() for _ in range(4)], jogadores=[], lances=[], jogadorAtual=None):
         self.monte = monte
         self.fileiras = fileiras
         self.jogadores = jogadores
         self.lances = lances
         self.jogadorAtual = jogadorAtual
-        self.modo = modo
-    
+
     # Redefine os jogadores
     def iniciarPartida(self, qtJogadores):
         self.jogadores = [Jogador(f"Jogador {i+1}") for i in range(qtJogadores)]
@@ -46,20 +45,32 @@ class Mesa:
         shuffle(baralho)    # Embaralha o novo baralho criado
         return baralho
 
+    def limparLances(self):
+        self.lances = []
+
+    def retirarCartas(self, qtCartas):
+        cartas = self.monte[:qtCartas]
+        del self.monte[:qtCartas]
+        return cartas
+    
+    def redefinirJogadorAtual(self):
+        self.jogadorAtual = self.jogadores[0]
+
     # A partir de um novo baralho, redistribuir as cartas para as fileiras e jogadores
     def redistribuirCartas(self):
-        self.lances = []
+        self.limparLances()
         self.monte = self.obterNovoBaralho()
         
         for fileira in self.fileiras:   # Distribuir uma carat para cada fileira
-            fileira.cartas = [self.monte.pop(0)]
+            cartas = self.retirarCartas(1)
+            fileira.setCartas(cartas)
         
         for jogador in self.jogadores:  # Distribui 10 cartas para cada jogador
-            jogador.mao = self.monte[:10]
-            del self.monte[:10]
+            cartas = self.retirarCartas(10)
+            jogador.setMao(cartas)
         
         # Define jogador atual como o 1º da lista
-        self.jogadorAtual = self.jogadores[0]
+        self.redefinirJogadorAtual()
         
     # Retorna próximo jogador que irá jogar
     def obterProximoJogador(self):
@@ -91,15 +102,29 @@ class Mesa:
         lances = self.lances.copy()
         for lance in lances:    # Tenta inserir um lance
             # Obtém fileiras ordenadas de acordo com as suas maiores cartas
+            cartaLance = lance.getCarta()
+            numCartaLance = cartaLance.getNumero()
+
             fileirasOrdenadas = self.obterFileirasOrdenadas()
+            
             for fileira in fileirasOrdenadas:   # Tenta inserir o lance em uma fileira
-                if lance.carta.numero > fileira.cartas[-1].numero:
+                cartasFileira = fileira.getCartas()
+                numUltimaCarta = cartasFileira[-1].getNumero()
+
+                if numCartaLance > numUltimaCarta:
                     # Encontra fileira possível para inserir o lance
-                    if len(fileira.cartas) == 5:    # PEGA EM 6
-                        for carta in fileira.cartas:    # Atualiza pontuação dos jogadores
-                            lance.jogador.pontuacao += carta.pontuacao
+                    if len(cartasFileira) == 5:    # PEGA EM 6
+                        jogadorLance = lance.getJogador()
+                        pontuacao = jogadorLance.getPontuacao()
+                        
+                        for carta in cartasFileira:    # Atualiza pontuação dos jogadores
+                           pontuacao += carta.pontuacao
+                        
                         fileira.limpar()
-                    fileira.inserirCarta(lance.carta)
+                        
+                        jogadorLance.setPontuacao(pontuacao)
+                    
+                    fileira.inserirCarta(cartaLance)
                     self.removerLance(lance)
                     break
                 if fileira == fileirasOrdenadas[-1]:
@@ -150,12 +175,35 @@ class Mesa:
     # Se encontrar, é o fim da partida
     def avaliarFimPartida(self):
         for jogador in self.jogadores:
-            if jogador.pontuacao > 66:
+            pontuacao = jogador.getPontuacao()
+            if pontuacao > 66:
                 return True
         return False
     
     def redefinirFileira(self, i):
-        self.jogadorAtual.pontuacao += self.fileiras[i].obterPontuacao()
+        pontuacao = self.jogadorAtual.getPontuacao()
+        pontuacao += self.fileiras[i].obterPontuacao()
+        self.jogadorAtual.setPontuacao(pontuacao)
+
         self.fileiras[i].limpar()
-        self.fileiras[i].inserirCarta(self.lances[0].carta)
+
+        carta = self.lances[0].getCarta()
+        self.fileiras[i].inserirCarta(carta)
+
         self.removerLance(self.lances[0])
+    
+    # Métodos Get e Set ======================
+    def getJogadorAtual(self):
+        return self.jogadorAtual
+    
+    def getJogadores(self):
+        return self.jogadores
+
+    def setJogadorAtual(self, jogadorAtual):
+        self.jogadorAtual = jogadorAtual
+
+    def getLances(self):
+        return self.lances
+
+    def getFileiras(self):
+        return self.fileiras
