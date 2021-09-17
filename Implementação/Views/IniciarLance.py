@@ -104,7 +104,7 @@ class IniciarLance(Frame):
     def atualizarNome(self):
         self.lblInserirNome.destroy()
         self.lblInserirNome = None
-        self.interface.mesa.jogadorAtual.setNome(self.novoNome.get())
+        self.interface.mesa.jogadorAtual.nome = self.novoNome.get()
         self.lblNomeJogador.configure(text=f"Vez de {self.novoNome.get()}")
         self.lblEditarNome.configure(text=f"Você pode editar seu nome clicando em Vez de {self.novoNome.get()}")
         self.novoNome.delete(0, 'end')
