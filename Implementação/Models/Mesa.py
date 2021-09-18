@@ -80,9 +80,9 @@ class Mesa:
     
     # Inserção ordenada do lance pelo número da carta
     def incluirLance(self, lance):
-        cartaLance = lance.carta.numero
+        cartaLance = lance.getCarta().getNumero()
         for i in range(len(self.lances)):
-            cartaLanceAtual = self.lances[i].carta.numero
+            cartaLanceAtual = self.lances[i].getCarta().getNumero()
             if cartaLanceAtual > cartaLance:
                 self.lances.insert(i, lance)
                 return  # Lance inserido
@@ -142,9 +142,9 @@ class Mesa:
         fileirasOrdenadas = [self.fileiras[0]]
         for fileira in self.fileiras[1:]:
             # Insere fileira ordenadamente em fileirasOrdenadas
-            maiorCartaFileira = fileira.cartas[-1].numero
+            maiorCartaFileira = fileira.getCartas()[-1].getNumero()
             for i in range(len(fileirasOrdenadas)): # Procura por posição adequada
-                maiorCartaFileiraOrd = fileirasOrdenadas[i].cartas[-1].numero
+                maiorCartaFileiraOrd = fileirasOrdenadas[i].getCartas()[-1].getNumero()
                 if maiorCartaFileira > maiorCartaFileiraOrd:
                     # Posição adequada encontrada
                     fileirasOrdenadas.insert(i, fileira)

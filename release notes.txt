@@ -1,0 +1,17 @@
+Requisitos para execução:
+   - Interpretador python 3.7 ou superior
+   
+Instruções de execução:
+   - Para a executar o programa, basta executar "python AtorJogador.py" no terminal
+
+Observações:
+   - Este software não é distribuído, todos os jogadores jogam em uma mesma máquina e requer 
+     que os jogadores sejam honestos uns com os outros para um bom aproveitamento do jogo.
+   - O jogo implementado considera a versão padrão, sem cartas extras de edições especiais.
+   - Não é necessária conexão com a internet para jogar.
+   - Como o tkinter não tem um suporte adequado a responsividade, pode ocorrer de as imagens
+     ficarem distorcidas dependendo das configurações de exibição utilizadas. Esse problema
+     pode ser resolvido mudando os ajustes de escala e layout no sistema operacional utilizado.
+
+
+Pega em 6!!!

@@ -23,6 +23,6 @@ class Jogador:
     
     def setPontuacao(self, pontuacao):
         self.pontuacao = pontuacao
-    
+
     def setNome(self, nome):
         self.nome = nome
