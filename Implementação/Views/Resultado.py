@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
 from Views.Components.Botao import Botao
-from Views.Components.Placar import Placar
 from os import path
 
 

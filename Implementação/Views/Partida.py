@@ -1,10 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from Views.Components.Mesa import Mesa
-from Views.Components.Fileira import Fileira
 from Views.Components.Placar import Placar
-from Views.Resultado import Resultado
-from Views.Components.Botao import Botao
 from os import path
 
 

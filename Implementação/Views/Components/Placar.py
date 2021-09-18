@@ -84,7 +84,3 @@ class Placar(Frame):
                                  bg="white",
                                  fg="#0e6fb6")
             self.lblsJogador[i].pack(anchor=E)
-    
-    # Esconde últimos lances
-    def esconderUltimosLances(self):
-        self.frLances.pack_forget()
